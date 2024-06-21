@@ -36,7 +36,8 @@ class Main extends Sprite
         
         if (!monikaExists) {
             trace("monika.chr is missing!");
-            //deleteCharacterFiles();
+           // deleteCharacterFiles();
+		   // Cur Error: Could Not Remove Directory
         }
 
         if (!sayoriExists) {
@@ -46,19 +47,9 @@ class Main extends Sprite
         return monikaExists && sayoriExists;
     }
 
-	/*
     private function deleteCharacterFiles():Void
     {
-        var characterDir = "assets/characters/";
-        var files = FileSystem.readDirectory(characterDir);
-        
-        for (file in files) {
-            var filePath = characterDir + file;
-            if (FileSystem.isFile(filePath)) {
-                trace("Deleting " + filePath);
-                File.deleteFile(filePath);
-            }
-        }
+        var characterDir:String = "assets/characters";
+        FileSystem.deleteDirectory(characterDir);
     }
-	*/
 }

@@ -2,25 +2,63 @@ package;
 
 import flixel.FlxGame;
 import openfl.display.Sprite;
+import sys.io.File;
+import sys.FileSystem;
+import states.PlayState;
+import states.SayoriQuickEndState;
 
 class Main extends Sprite
 {
-	var config = {
-		width: 1280, // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
-		height: 720, // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
-		zoom: -1.0, // If -1, zoom is automatically calculated to fit the window dimensions. (Removed from Flixel 5.0.0)
-		framerate: 60, // How many frames per second the game should run at.
-		initialState: PlayState, // is the state in which the game will start.
-		skipSplash: false, // Whether to skip the flixel splash screen that appears in release mode.
-		startFullscreen: false // Whether to start the game in fullscreen on desktop targets'
-	};
+    var config = {
+        width: 1280, // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
+        height: 720, // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
+        zoom: -1.0, // If -1, zoom is automatically calculated to fit the window dimensions. (Removed from Flixel 5.0.0)
+        framerate: 60, // How many frames per second the game should run at.
+        skipSplash: false, // Whether to skip the flixel splash screen that appears in release mode.
+        startFullscreen: false // Whether to start the game in fullscreen on desktop targets'
+    };
 
-	// You can pretty much ignore everything from here on - your code should go in your states.
+    public function new()
+    {
+        super();
+        
+        var initialState:Class<flixel.FlxState> = if (checkFiles()) PlayState else SayoriQuickEndState;
 
-	public function new()
-	{
-		super();
-		addChild(new FlxGame(config.width, config.height, config.initialState, #if (flixel < "5.0.0") config.zoom, #end config.framerate, config.framerate,
-			config.skipSplash, config.startFullscreen));
-	}
+        addChild(new FlxGame(config.width, config.height, initialState, 
+            #if (flixel < "5.0.0") config.zoom, #end 
+            config.framerate, config.framerate, config.skipSplash, config.startFullscreen));
+    }
+
+    private function checkFiles():Bool
+    {
+        var monikaExists = FileSystem.exists("assets/characters/monika.chr");
+        var sayoriExists = FileSystem.exists("assets/characters/sayori.chr");
+        
+        if (!monikaExists) {
+            trace("monika.chr is missing!");
+            //deleteCharacterFiles();
+        }
+
+        if (!sayoriExists) {
+            trace("sayori.chr is missing!");
+        }
+
+        return monikaExists && sayoriExists;
+    }
+
+	/*
+    private function deleteCharacterFiles():Void
+    {
+        var characterDir = "assets/characters/";
+        var files = FileSystem.readDirectory(characterDir);
+        
+        for (file in files) {
+            var filePath = characterDir + file;
+            if (FileSystem.isFile(filePath)) {
+                trace("Deleting " + filePath);
+                File.deleteFile(filePath);
+            }
+        }
+    }
+	*/
 }

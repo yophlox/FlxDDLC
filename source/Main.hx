@@ -10,12 +10,12 @@ import states.SayoriQuickEndState;
 class Main extends Sprite
 {
     var config = {
-        width: 1280, // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
-        height: 720, // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
-        zoom: -1.0, // If -1, zoom is automatically calculated to fit the window dimensions. (Removed from Flixel 5.0.0)
-        framerate: 60, // How many frames per second the game should run at.
-        skipSplash: false, // Whether to skip the flixel splash screen that appears in release mode.
-        startFullscreen: false // Whether to start the game in fullscreen on desktop targets'
+        width: 1280,
+        height: 720,
+        zoom: -1.0,
+        framerate: 60,
+        skipSplash: false,
+        startFullscreen: false 
     };
 
     public function new()

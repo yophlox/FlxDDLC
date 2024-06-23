@@ -36,14 +36,6 @@ class Main extends Sprite
         var timer = new Timer(1000); // checking for obs every second xd
         timer.addEventListener(TimerEvent.TIMER, onCheckObs);
         timer.start();
-
-        if (!isObsRunning()) {
-            trace("OBS is not running!");
-        }
-        else
-        {
-            trace("OBS is started and running!");
-        }
     }
 
     private function checkFiles():Bool
@@ -108,12 +100,8 @@ class Main extends Sprite
 
     private function onCheckObs(event:TimerEvent):Void
     {
-        if (!isObsRunning()) {
-            trace("OBS is not running!");
-        }
-        else
-        {
-            trace("OBS started and running!");
+        if (isObsRunning()) {
+           // oogh
         }
     }
 }

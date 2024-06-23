@@ -6,10 +6,12 @@ import flixel.FlxG;
 
 class PlayState extends FlxState
 {
+	var dialogueFlxText:FlxText;
 	override public function create()
 	{
 		super.create();
 
+		
 		var dialoguetext:Array<String> = openfl.Assets.getText("assets/data/act1/testdialogue.txt").split("@@");
 		trace(dialoguetext);
 	}

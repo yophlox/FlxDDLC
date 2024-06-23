@@ -8,6 +8,7 @@ import openfl.events.TimerEvent;
 import sys.io.File;
 import sys.FileSystem;
 import sys.io.Process;
+import states.WarningState;
 import states.PlayState;
 import states.SayoriQuickEndState;
 
@@ -26,7 +27,7 @@ class Main extends Sprite
     {
         super();
         
-        var initialState:Class<flixel.FlxState> = if (checkFiles()) PlayState else SayoriQuickEndState;
+        var initialState:Class<flixel.FlxState> = if (checkFiles()) WarningState else SayoriQuickEndState;
 
         addChild(new FlxGame(config.width, config.height, initialState, 
             #if (flixel < "5.0.0") config.zoom, #end 

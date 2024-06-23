@@ -45,7 +45,7 @@ class WarningState extends FlxState
 	{
 		if (FlxG.keys.justPressed.ENTER)
         {
-            FlxG.switchState(new states.PlayState());
+            FlxG.switchState(new states.MainMenuState());
         }    
         else if (FlxG.keys.justPressed.ESCAPE)
         {    

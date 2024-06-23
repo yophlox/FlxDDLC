@@ -10,7 +10,7 @@ import sys.FileSystem;
 import sys.io.Process;
 import states.WarningState;
 import states.PlayState;
-import states.SayoriQuickEndState;
+import states.MainMenuState;
 
 class Main extends Sprite
 {
@@ -27,44 +27,44 @@ class Main extends Sprite
     {
         super();
         
-        var initialState:Class<flixel.FlxState> = if (checkFiles()) WarningState else SayoriQuickEndState;
+        var initialState:Class<flixel.FlxState> = if (checkFirstRun()) WarningState else MainMenuState;
 
         addChild(new FlxGame(config.width, config.height, initialState, 
             #if (flixel < "5.0.0") config.zoom, #end 
             config.framerate, config.framerate, config.skipSplash, config.startFullscreen));
 
         // There's probably a way better way to do this but this works so yeah
+        /*
         var timer = new Timer(1000); // checking for obs every second xd
         timer.addEventListener(TimerEvent.TIMER, onCheckObs);
         timer.start();
+        */
     }
 
-    private function checkFiles():Bool
+    private function checkFirstRun():Bool
     {
+        var firstRunFile = "firstrun";
+        var firstRunExists = FileSystem.exists(firstRunFile);
+
+        if (!firstRunExists) {
+            // Create the "firstrun" file
+            var file = File.write(firstRunFile, true);
+            file.close();
+        }
+
+        // Check if the necessary character files exist
         var monikaExists = FileSystem.exists("assets/characters/monika.chr");
         var sayoriExists = FileSystem.exists("assets/characters/sayori.chr");
-        var charsexist:Bool = true;
-        
+
         if (!monikaExists) {
             trace("monika.chr is missing!");
-           // Credits: https://ashes999.github.io/learnhaxe/recursively-delete-a-directory-in-haxe.html
-           deleteDirRecursively("assets/characters");
-           trace("deleted characters folder lol!");
-           charsexist = false;
-        }
-
-        if (!sayoriExists) {
-            trace("sayori.chr is missing!");
-            charsexist = true;
-        }
-
-        if (!charsexist)
-        {
+            deleteDirRecursively("assets/characters");
+            trace("deleted characters folder lol!");
             Sys.exit(1);
             trace("The game can't run without monika and sayori lol!");
-        }    
+        }
 
-        return monikaExists && sayoriExists;
+        return !firstRunExists && monikaExists && sayoriExists;
     }
 
     // Credits: https://ashes999.github.io/learnhaxe/recursively-delete-a-directory-in-haxe.html

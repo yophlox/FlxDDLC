@@ -22,6 +22,16 @@ class PlayState extends FlxState
         dialogueManager = new DialogueManager("assets/data/act1/testdialogue.txt");
         add(dialogueManager.getDialogueFlxText());
 
+
+		var dialoguebox:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('textbox'));
+		dialoguebox.scrollFactor.x = 0;
+		dialoguebox.scrollFactor.y = 0.18;
+		dialoguebox.setGraphicSize(Std.int(dialoguebox.width * 1.1));
+		dialoguebox.updateHitbox();
+		dialoguebox.screenCenter();
+		dialoguebox.y -= 40;
+		add(dialoguebox);
+		
         super.create();
     }
 

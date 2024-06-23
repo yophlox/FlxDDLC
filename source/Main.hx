@@ -33,23 +33,45 @@ class Main extends Sprite
     {
         var monikaExists = FileSystem.exists("assets/characters/monika.chr");
         var sayoriExists = FileSystem.exists("assets/characters/sayori.chr");
+        var charsexist:Bool = true;
         
         if (!monikaExists) {
             trace("monika.chr is missing!");
-           // deleteCharacterFiles();
-		   // Cur Error: Could Not Remove Directory
+           // Credits: https://ashes999.github.io/learnhaxe/recursively-delete-a-directory-in-haxe.html
+           deleteDirRecursively("assets/characters");
+           trace("deleted characters folder lol!");
+           charsexist = false;
+
         }
 
         if (!sayoriExists) {
             trace("sayori.chr is missing!");
+            charsexist = true;
         }
+
+        if (!charsexist)
+        {
+            Sys.exit(1);
+            trace("The game can't run without monika and sayori lol!");
+        }    
 
         return monikaExists && sayoriExists;
     }
 
-    private function deleteCharacterFiles():Void
+    // Credits: https://ashes999.github.io/learnhaxe/recursively-delete-a-directory-in-haxe.html
+    private function deleteDirRecursively(path:String) : Void
     {
-        var characterDir:String = "assets/characters";
-        FileSystem.deleteDirectory(characterDir);
+    if (sys.FileSystem.exists(path) && sys.FileSystem.isDirectory(path))
+    {
+        var entries = sys.FileSystem.readDirectory(path);
+        for (entry in entries) {
+        if (sys.FileSystem.isDirectory(path + '/' + entry)) {
+            deleteDirRecursively(path + '/' + entry);
+            sys.FileSystem.deleteDirectory(path + '/' + entry);
+        } else {
+            sys.FileSystem.deleteFile(path + '/' + entry);
+        }
+        }
+    }
     }
 }

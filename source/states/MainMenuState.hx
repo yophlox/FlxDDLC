@@ -17,11 +17,23 @@ class MainMenuState extends FlxState
 		titlestatebg.screenCenter(X);
 		add(titlestatebg);
 
-		var sidething:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('gui/sidething'));
+		var sidething:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('gui/menuside'));
 		sidething.setGraphicSize(Std.int(sidething.width * 1.1));
 		sidething.updateHitbox();
 		sidething.screenCenter();
 		add(sidething);
+
+		var girls:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('gui/menugirls'));
+		girls.setGraphicSize(Std.int(girls.width * 1.1));
+		girls.updateHitbox();
+		girls.screenCenter();
+		add(girls);
+
+		var menulogo:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('gui/menulogo'));
+		menulogo.setGraphicSize(Std.int(menulogo.width * 1.1));
+		menulogo.updateHitbox();
+		menulogo.screenCenter();
+		add(menulogo);
 
         super.create();
     }

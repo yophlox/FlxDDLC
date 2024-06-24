@@ -32,13 +32,6 @@ class Main extends Sprite
         addChild(new FlxGame(config.width, config.height, initialState, 
             #if (flixel < "5.0.0") config.zoom, #end 
             config.framerate, config.framerate, config.skipSplash, config.startFullscreen));
-
-        // There's probably a way better way to do this but this works so yeah
-        /*
-        var timer = new Timer(1000); // checking for obs every second xd
-        timer.addEventListener(TimerEvent.TIMER, onCheckObs);
-        timer.start();
-        */
     }
 
     private function checkFirstRun():Bool
@@ -81,28 +74,6 @@ class Main extends Sprite
                     sys.FileSystem.deleteFile(path + '/' + entry);
                 }
             }
-        }
-    }
-
-    private function isObsRunning():Bool
-    {
-        var result = "";
-        try {
-            var process = new Process("tasklist", []);
-            var output = process.stdout.readAll().toString();
-            result = output.toLowerCase();
-        } catch (e:Dynamic) {
-            trace("Failed to check running processes: " + e);
-            return false;
-        }
-
-        return result.indexOf("obs64.exe") != -1 || result.indexOf("obs32.exe") != -1;
-    }
-
-    private function onCheckObs(event:TimerEvent):Void
-    {
-        if (isObsRunning()) {
-           // oogh
         }
     }
 }

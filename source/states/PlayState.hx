@@ -4,13 +4,17 @@ import flixel.FlxState;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import backend.DialogueManager;
+import flixel.input.mouse.FlxMouse;
 
 class PlayState extends FlxState
 {
     private var dialogueManager:DialogueManager;
+    private var mouse:FlxMouse;
 
     override public function create()
     {
+        mouse = FlxG.mouse;
+
         var clubbg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('bg/club'));
         clubbg.scrollFactor.x = 0;
         clubbg.scrollFactor.y = 0.18;
@@ -18,9 +22,6 @@ class PlayState extends FlxState
         clubbg.updateHitbox();
         clubbg.screenCenter();
         add(clubbg);
-
-        dialogueManager = new DialogueManager("assets/data/act1/testdialogue.txt");
-        add(dialogueManager.getDialogueFlxText());
 
         var dialoguebox:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('textbox'));
         dialoguebox.scrollFactor.x = 0;
@@ -30,6 +31,9 @@ class PlayState extends FlxState
         dialoguebox.screenCenter();
         dialoguebox.y -= 40;
         add(dialoguebox);
+
+        dialogueManager = new DialogueManager("assets/data/act1/testdialogue.txt");
+        add(dialogueManager.getDialogueFlxText());
 
         super.create();
     }
@@ -45,15 +49,11 @@ class PlayState extends FlxState
         }
         
         // Reg shit
-        if (FlxG.keys.justPressed.ENTER)
-        {
-            if (!dialogueManager.isDialogueComplete())
-            {
+        if (FlxG.keys.justPressed.ENTER || mouse.justPressed) {
+            if (!dialogueManager.isDialogueComplete()) {
                 dialogueManager.start();
-            }
-            else
-            {
-                // End of dialogue handler here idk how do kinda do this yet tho
+            } else {
+                // blech
             }
         }
     }

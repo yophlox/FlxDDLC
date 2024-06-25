@@ -19,9 +19,9 @@ class DialogueManager
         dialogues = openfl.Assets.getText(dialogueFile).split("\n");
         currentLine = 0;
 
-        dialogueFlxText = new FlxText(0, FlxG.height - 100, FlxG.width, "");
-        dialogueFlxText.setFormat("assets/fonts/Aller_Rg.ttf", 32, FlxColor.WHITE, "center");
-        dialogueFlxText.screenCenter();
+        dialogueFlxText = new FlxText(0, FlxG.height - 150, FlxG.width, "");
+        dialogueFlxText.setFormat("assets/fonts/Aller_Rg.ttf", 24, FlxColor.WHITE, OUTLINE, FlxColor.BLACK);
+        dialogueFlxText.x += 225;
 
         characterNames = new Map<String, String>();
         characterNames.set("s", "Sayori");

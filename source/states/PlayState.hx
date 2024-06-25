@@ -32,7 +32,7 @@ class PlayState extends FlxState
         dialoguebox.y -= 40;
         add(dialoguebox);
 
-        dialogueManager = new DialogueManager("assets/data/act1/testdialogue.txt");
+        dialogueManager = new DialogueManager("assets/data/act1/dialogue.txt");
         add(dialogueManager.getDialogueFlxText());
 
         super.create();

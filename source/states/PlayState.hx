@@ -10,6 +10,8 @@ class PlayState extends FlxState
 {
     private var dialogueManager:DialogueManager;
     private var mouse:FlxMouse;
+    var act1:Bool = true;
+    var act2:Bool = false;
 
     override public function create()
     {
@@ -32,8 +34,11 @@ class PlayState extends FlxState
         dialoguebox.y -= 40;
         add(dialoguebox);
 
-        dialogueManager = new DialogueManager("assets/data/act1/dialogue.txt");
-        add(dialogueManager.getDialogueFlxText());
+        if (act1)
+        {
+            dialogueManager = new DialogueManager("assets/data/act1/dialogue.txt");
+            add(dialogueManager.getDialogueFlxText());
+        }
 
         super.create();
     }

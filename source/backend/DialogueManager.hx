@@ -28,7 +28,7 @@ class DialogueManager
         characterNames.set("m", "Monika");
         characterNames.set("n", "Natsuki");
         characterNames.set("y", "Yuri");
-        characterNames.set("mc", ""); // To be defined...
+        characterNames.set("mc", "MC");
 
         updateDialogue();
     }
@@ -63,9 +63,7 @@ class DialogueManager
             }
             currentLine++;
         }
-
-        // Handle end of dialogue
-        dialogueFlxText.text = ""; // or handle end of dialogue state
+        dialogueFlxText.text = "";
     }
 
     private function handleLineBreaks(line:String):String

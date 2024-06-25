@@ -44,7 +44,6 @@ class NameEnterSubstate extends FlxSubState
 
 	override function update(elapsed:Float)
 	{
-        // Skip to PlayState for now, even with no name.
         if (FlxG.keys.justPressed.ENTER)
         {
 			FlxG.switchState(new states.PlayState());

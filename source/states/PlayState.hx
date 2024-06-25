@@ -22,16 +22,15 @@ class PlayState extends FlxState
         dialogueManager = new DialogueManager("assets/data/act1/testdialogue.txt");
         add(dialogueManager.getDialogueFlxText());
 
+        var dialoguebox:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('textbox'));
+        dialoguebox.scrollFactor.x = 0;
+        dialoguebox.scrollFactor.y = 0.18;
+        dialoguebox.setGraphicSize(Std.int(dialoguebox.width * 1.1));
+        dialoguebox.updateHitbox();
+        dialoguebox.screenCenter();
+        dialoguebox.y -= 40;
+        add(dialoguebox);
 
-		var dialoguebox:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('textbox'));
-		dialoguebox.scrollFactor.x = 0;
-		dialoguebox.scrollFactor.y = 0.18;
-		dialoguebox.setGraphicSize(Std.int(dialoguebox.width * 1.1));
-		dialoguebox.updateHitbox();
-		dialoguebox.screenCenter();
-		dialoguebox.y -= 40;
-		add(dialoguebox);
-		
         super.create();
     }
 
@@ -39,6 +38,13 @@ class PlayState extends FlxState
     {
         super.update(elapsed);
 
+        // Debug purpose moment
+        if (FlxG.keys.justPressed.R)
+        {
+            FlxG.resetState();
+        }
+        
+        // Reg shit
         if (FlxG.keys.justPressed.ENTER)
         {
             if (!dialogueManager.isDialogueComplete())
@@ -47,7 +53,7 @@ class PlayState extends FlxState
             }
             else
             {
-                // end of dialogue handler here idk how do kinda do this yet tho
+                // End of dialogue handler here idk how do kinda do this yet tho
             }
         }
     }

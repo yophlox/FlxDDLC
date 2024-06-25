@@ -1,3 +1,4 @@
-This is dialog for box 1.
-Dialog for box 2.
-And so on...
+s "Doc Dialouge 1"
+m "Doc Dialouge 2"
+n "Doc Dialouge 3"
+y "Doc Dialouge 4"

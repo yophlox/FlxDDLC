@@ -38,30 +38,39 @@ class DialogueManager
         while (currentLine < dialogues.length)
         {
             var line:String = dialogues[currentLine].trim();
-            if (line.length > 3 && line.charAt(1) == ' ')
+            if (line.length > 0)
             {
                 var prefix:String = line.charAt(0);
-                if (characterNames.exists(prefix))
+                if (characterNames.exists(prefix) && line.charAt(1) == ' ')
                 {
                     var dialogue:String = line.substr(2);
                     var characterName:String = characterNames.get(prefix);
                     if (characterName != "")
                     {
-                        dialogueFlxText.text = characterName + ": " + dialogue;
+                        dialogueFlxText.text = characterName + ": " + handleLineBreaks(dialogue);
                     }
                     else
                     {
-                        dialogueFlxText.text = dialogue;
+                        dialogueFlxText.text = handleLineBreaks(dialogue);
                     }
-                    currentLine++;
-                    return;
                 }
+                else
+                {
+                    dialogueFlxText.text = handleLineBreaks(line);
+                }
+                currentLine++;
+                return;
             }
             currentLine++;
         }
 
         // Handle end of dialogue
         dialogueFlxText.text = ""; // or handle end of dialogue state
+    }
+
+    private function handleLineBreaks(line:String):String
+    {
+        return line.split("n\\").join("\n");
     }
 
     public function start():Void

@@ -1,0 +1,8 @@
+This is a remake/port of Doki Doki Literature Club to HaxeFlixel!
+Made by TyDotCS
+This is probably one of my biggest projects lol
+Onto the normal ddlc warning stuff!
+This game is not suitable for children or those who are easily disturbed.
+Individuals suffering from anxiety or depression n\may not have a safe experience playing this game.
+By playing Doki Doki Literature Club, you agree that you are at least 13 years n\of age, and you consent to your exposure of highly disturbing content.
+Press Space to continue.

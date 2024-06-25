@@ -1,24 +1,19 @@
 package states;
 
+import flixel.FlxState;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxSubState;
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
-import flixel.effects.FlxFlicker;
-import lime.app.Application;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxTimer;
-import flixel.FlxState;
+import backend.DialogueManager;
+import flixel.input.mouse.FlxMouse;
 
 class WarningState extends FlxState
 {
-	var warnText:FlxText;
+    private var dialogueManager:DialogueManager;
+    private var mouse:FlxMouse;
 
-	override function create()
-	{
-		super.create();
+    override public function create()
+    {
+        mouse = FlxG.mouse;
 
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('bg/warning/warning'));
 		bg.scrollFactor.x = 0;
@@ -29,29 +24,37 @@ class WarningState extends FlxState
 		bg.antialiasing = true;
 		add(bg);
 
-		warnText = new FlxText(0, 0, FlxG.width,
-			"This game is not suitable for children\nor those who are easily disturbed.\n
-			Individuals suffering from anxiety or depression may not have a safe experience playing this game.\n
-            By playing Doki Doki Literature Club, you agree that you are at least 13 years of age, and you consent to your exposure of highly disturbing content.\n
-			Press ENTER to continue\n
-			Press ESCAPE to quit.",
-			32);
-		warnText.setFormat("assets/fonts/Aller_Rg.ttf", 32, FlxColor.BLACK, CENTER);
-		warnText.screenCenter(Y);
-		add(warnText);
-	}
+        var dialoguebox:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('textbox'));
+        dialoguebox.scrollFactor.x = 0;
+        dialoguebox.scrollFactor.y = 0.18;
+        dialoguebox.setGraphicSize(Std.int(dialoguebox.width * 1.1));
+        dialoguebox.updateHitbox();
+        dialoguebox.screenCenter();
+        dialoguebox.y -= 40;
+        add(dialoguebox);
 
-	override function update(elapsed:Float)
-	{
-		if (FlxG.keys.justPressed.ENTER)
+        dialogueManager = new DialogueManager("assets/data/data-goes-here.txt");
+        add(dialogueManager.getDialogueFlxText());
+
+        super.create();
+    }
+
+    override public function update(elapsed:Float)
+    {
+        super.update(elapsed);
+
+        if (FlxG.keys.justPressed.SPACE)
         {
-            FlxG.switchState(new states.MainMenuState());
-        }    
-        else if (FlxG.keys.justPressed.ESCAPE)
-        {    
-            Sys.exit(1);
+            FlxG.switchState(new MainMenuState());
         }
-
-		super.update(elapsed);
-	}
+        
+        // Reg shit
+        if (FlxG.keys.justPressed.ENTER || mouse.justPressed) {
+            if (!dialogueManager.isDialogueComplete()) {
+                dialogueManager.start();
+            } else {
+                // blech
+            }
+        }
+    }
 }

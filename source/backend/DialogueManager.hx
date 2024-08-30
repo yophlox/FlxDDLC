@@ -3,77 +3,148 @@ package backend;
 import flixel.text.FlxText;
 import flixel.FlxG;
 import flixel.util.FlxColor;
-import flixel.FlxState;
 import flixel.FlxSprite;
 using StringTools;
 
 class DialogueManager
 {
     private var dialogueFlxText:FlxText;
-    private var dialogues:Array<String>;
+    private var nameFlxText:FlxText;
+    private var dialogues:Array<DialogueLine>;
     private var currentLine:Int;
-    private var characterNames:Map<String, String>;
+    private var characters:Map<String, FlxSprite>;
+    private var textSpeed:Float = 0.05;
+    private var currentText:String = "";
+    private var targetText:String = "";
+    private var textTimer:Float = 0;
 
     public function new(dialogueFile:String)
     {
-        dialogues = openfl.Assets.getText(dialogueFile).split("\n");
+        dialogues = parseDialogueFile(dialogueFile);
         currentLine = 0;
 
-        dialogueFlxText = new FlxText(0, FlxG.height - 150, FlxG.width, "");
-        dialogueFlxText.setFormat("assets/fonts/Aller_Rg.ttf", 24, FlxColor.WHITE, OUTLINE, FlxColor.BLACK);
-        dialogueFlxText.x += 225;
+        dialogueFlxText = new FlxText(225, FlxG.height - 150, FlxG.width - 450, "");
+        dialogueFlxText.setFormat("assets/fonts/Aller_Rg.ttf", 24, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 
-        characterNames = new Map<String, String>();
-        characterNames.set("s", "Sayori");
-        characterNames.set("m", "Monika");
-        characterNames.set("n", "Natsuki");
-        characterNames.set("y", "Yuri");
-        characterNames.set("mc", "MC");
+        nameFlxText = new FlxText(230, FlxG.height - 190, 200, "");
+        nameFlxText.setFormat("assets/fonts/Aller_Rg.ttf", 28, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 
-        updateDialogue();
+        characters = new Map<String, FlxSprite>();
     }
 
-    private function updateDialogue():Void
+    private function parseDialogueFile(dialogueFile:String):Array<DialogueLine>
     {
-        while (currentLine < dialogues.length)
+        var lines = openfl.Assets.getText(dialogueFile).split("\n");
+        var parsedDialogues = new Array<DialogueLine>();
+
+        for (line in lines)
         {
-            var line:String = dialogues[currentLine].trim();
+            line = line.trim();
             if (line.length > 0)
             {
-                var prefix:String = line.charAt(0);
-                if (characterNames.exists(prefix) && line.charAt(1) == ' ')
+                var parts = line.split(" ");
+                if (parts.length >= 2)
                 {
-                    var dialogue:String = line.substr(2);
-                    var characterName:String = characterNames.get(prefix);
-                    if (characterName != "")
-                    {
-                        dialogueFlxText.text = characterName + ": " + handleLineBreaks(dialogue);
+                    var character = parts[0];
+                    var text = parts.slice(1).join(" ").trim();
+                    if (text.startsWith("\"") && text.endsWith("\"")) {
+                        text = text.substr(1, text.length - 2);
                     }
-                    else
-                    {
-                        dialogueFlxText.text = handleLineBreaks(dialogue);
+                    
+                    if (character == "s" || character == "mc" || character == "n" || character == "y" || character == "m") {
+                        parsedDialogues.push({
+                            character: character,
+                            text: text
+                        });
+                    } else {
+                        parsedDialogues.push({
+                            character: "",
+                            text: line
+                        });
                     }
                 }
-                else
-                {
-                    dialogueFlxText.text = handleLineBreaks(line);
-                }
-                currentLine++;
-                return;
             }
-            currentLine++;
         }
-        dialogueFlxText.text = "";
-    }
 
-    private function handleLineBreaks(line:String):String
-    {
-        return line.split("n\\").join("\n");
+        return parsedDialogues;
     }
 
     public function start():Void
     {
         updateDialogue();
+    }
+
+    private function updateDialogue():Void
+    {
+        if (currentLine < dialogues.length)
+        {
+            var line = dialogues[currentLine];
+            switch (line.character) {
+                case "s":
+                    nameFlxText.text = "Sayori";
+                case "mc":
+                    nameFlxText.text = "Player";
+                case "n":
+                    nameFlxText.text = "Natsuki";
+                case "y":
+                    nameFlxText.text = "Yuri";
+                case "m":
+                    nameFlxText.text = "Monika";
+                default:
+                    nameFlxText.text = "";
+            }
+            targetText = line.text;
+            currentText = "";
+            textTimer = 0;
+            showCharacter(line.character);
+            currentLine++;
+        }
+        else
+        {
+            nameFlxText.text = "";
+            dialogueFlxText.text = "";
+        }
+    }
+
+    public function update(elapsed:Float):Void
+    {
+        if (currentText.length < targetText.length)
+        {
+            textTimer += elapsed;
+            while (textTimer >= textSpeed)
+            {
+                currentText += targetText.charAt(currentText.length);
+                textTimer -= textSpeed;
+            }
+            dialogueFlxText.text = currentText;
+        }
+    }
+
+    public function skipText():Void
+    {
+        if (currentText.length < targetText.length)
+        {
+            currentText = targetText;
+            dialogueFlxText.text = currentText;
+        }
+        else
+        {
+            updateDialogue();
+        }
+    }
+
+    private function showCharacter(character:String):Void
+    {
+        for (char in characters.keys())
+        {
+            characters[char].visible = (char == character);
+        }
+    }
+
+    public function addCharacter(name:String, sprite:FlxSprite):Void
+    {
+        characters.set(name, sprite);
+        sprite.visible = false;
     }
 
     public function isDialogueComplete():Bool
@@ -85,4 +156,14 @@ class DialogueManager
     {
         return dialogueFlxText;
     }
+
+    public function getNameFlxText():FlxText
+    {
+        return nameFlxText;
+    }
+}
+
+typedef DialogueLine = {
+    character:String,
+    text:String
 }

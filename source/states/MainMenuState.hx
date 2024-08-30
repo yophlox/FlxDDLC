@@ -42,11 +42,9 @@ class MainMenuState extends FlxState
     {
         if (FlxG.keys.justPressed.ENTER)
         {
-			FlxG.switchState(new PlayState());
-			/*
+			//FlxG.switchState(new PlayState());
 			var typename = new substates.NameEnterSubstate();
             openSubState(typename);
-			*/
         }
         super.update(elapsed);
     }

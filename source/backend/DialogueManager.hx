@@ -17,6 +17,8 @@ class DialogueManager
     private var currentText:String = "";
     private var targetText:String = "";
     private var textTimer:Float = 0;
+    private var textSpeedMultiplier:Float = 1.0;
+    private static var playerName:String = "MC";
 
     public function new(dialogueFile:String)
     {
@@ -83,7 +85,7 @@ class DialogueManager
                 case "s":
                     nameFlxText.text = "Sayori";
                 case "mc":
-                    nameFlxText.text = "Player";
+                    nameFlxText.text = playerName;
                 case "n":
                     nameFlxText.text = "Natsuki";
                 case "y":
@@ -106,11 +108,16 @@ class DialogueManager
         }
     }
 
+    public static function setPlayerName(name:String):Void
+    {
+        playerName = name;
+    }
+
     public function update(elapsed:Float):Void
     {
         if (currentText.length < targetText.length)
         {
-            textTimer += elapsed;
+            textTimer += elapsed * textSpeedMultiplier;
             while (textTimer >= textSpeed)
             {
                 currentText += targetText.charAt(currentText.length);
@@ -160,6 +167,11 @@ class DialogueManager
     public function getNameFlxText():FlxText
     {
         return nameFlxText;
+    }
+
+    public function setTextSpeed(speed:Float):Void
+    {
+        textSpeedMultiplier = speed;
     }
 }
 

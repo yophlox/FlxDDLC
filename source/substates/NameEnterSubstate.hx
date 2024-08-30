@@ -3,57 +3,92 @@ package substates;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.input.keyboard.FlxKey;
-import flixel.system.FlxSound;
 import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
+import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
-import flixel.FlxSubState;
-import flixel.FlxCamera;
 
 class NameEnterSubstate extends FlxSubState
 {
-    var nametext:FlxText;
+    var nameText:FlxText;
+    var inputText:FlxText;
+    var okButton:FlxButton;
+    var playerName:String = "";
 
-	public function new()
-	{
-		super();
+    public function new()
+    {
+        super();
 
         var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.WHITE);
         bg.scrollFactor.set();
         bg.alpha = 0.65;
-		bg.screenCenter();
+        bg.screenCenter();
         add(bg);
 
-		nametext = new FlxText(0, 0, FlxG.width, "Please enter your name", 32);
-		nametext.setFormat(Paths.font("Aller_Rg.ttf"), 32, FlxColor.BLACK, CENTER);
-		nametext.screenCenter(Y);
-		add(nametext);
+        nameText = new FlxText(0, FlxG.height * 0.3, FlxG.width, "Please enter your name", 32);
+        nameText.setFormat(Paths.font("Aller_Rg.ttf"), 32, FlxColor.BLACK, CENTER);
+        add(nameText);
 
-        /*
-		var levelInfo:FlxText = new FlxText(20, 15, 0, "DEMO LEVEL", 32);
-		levelInfo.scrollFactor.set();
-		levelInfo.setFormat(Paths.font("vcr.ttf"), 32);
-		levelInfo.updateHitbox();
-		add(levelInfo);
-        */
-	}
+        inputText = new FlxText(0, FlxG.height * 0.4, FlxG.width, "", 24);
+        inputText.setFormat(Paths.font("Aller_Rg.ttf"), 24, FlxColor.BLACK, CENTER);
+        add(inputText);
+
+        okButton = new FlxButton(0, FlxG.height * 0.6, "OK", onOkClick);
+        okButton.screenCenter(X);
+        add(okButton);
+    }
 
 	override function update(elapsed:Float)
 	{
-        if (FlxG.keys.justPressed.ENTER)
-        {
-			FlxG.switchState(new states.PlayState());
-        }
-
 		super.update(elapsed);
+
+		if (FlxG.keys.justPressed.BACKSPACE && playerName.length > 0)
+		{
+			playerName = playerName.substr(0, playerName.length - 1);
+		}
+		else if (FlxG.keys.justPressed.ENTER)
+		{
+			onOkClick();
+		}
+		else
+		{
+			var pressedKey = getJustPressedLetter();
+			if (pressedKey != null)
+			{
+				var keyString = String.fromCharCode(pressedKey);
+				if (FlxG.keys.pressed.SHIFT)
+				{
+					keyString = keyString.toUpperCase();
+				}
+				else
+				{
+					keyString = keyString.toLowerCase();
+				}
+				playerName += keyString;
+				if (playerName.length > 10) playerName = playerName.substr(0, 10);
+			}
+		}
+
+		inputText.text = playerName;
 	}
 
-	override function destroy()
+	private function getJustPressedLetter():Null<Int>
 	{
-		super.destroy();
-	}	
+		for (i in 65...91)
+		{
+			if (FlxG.keys.justPressed.byCode(i))
+			{
+				return i;
+			}
+		}
+		return null;
+	}
+
+    function onOkClick()
+    {
+        if (playerName.length > 0)
+        {
+            DialogueManager.setPlayerName(playerName);
+            FlxG.switchState(new states.PlayState());
+        }
+    }
 }

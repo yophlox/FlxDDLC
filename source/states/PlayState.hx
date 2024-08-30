@@ -38,6 +38,7 @@ class PlayState extends FlxState
         if (act1)
         {
             dialogueManager = new DialogueManager("assets/data/act1/dialogue.txt");
+            dialogueManager.setTextSpeed(2.0);
             add(dialogueManager.getDialogueFlxText());
             add(dialogueManager.getNameFlxText());
             

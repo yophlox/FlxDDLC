@@ -75,7 +75,7 @@ class NameEnterSubstate extends FlxSubState
 	{
 		for (i in 65...91)
 		{
-			if (FlxG.keys.justPressed.byCode(i))
+			if (FlxG.keys.anyJustPressed([i]))
 			{
 				return i;
 			}

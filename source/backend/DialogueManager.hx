@@ -53,6 +53,8 @@ class DialogueManager
                         text = text.substr(1, text.length - 2);
                     }
                     
+                    text = StringTools.replace(text, "[player]", playerName);
+                    
                     if (character == "s" || character == "mc" || character == "n" || character == "y" || character == "m") {
                         parsedDialogues.push({
                             character: character,

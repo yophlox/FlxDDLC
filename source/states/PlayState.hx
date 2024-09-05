@@ -42,7 +42,6 @@ class PlayState extends FlxState
             add(dialogueManager.getDialogueFlxText());
             add(dialogueManager.getNameFlxText());
             
-            /*
             var sayori = new FlxSprite(100, 100).loadGraphic(Paths.image('characters/sayori'));
             var monika = new FlxSprite(300, 100).loadGraphic(Paths.image('characters/monika'));
             var natsuki = new FlxSprite(500, 100).loadGraphic(Paths.image('characters/natsuki'));
@@ -57,7 +56,6 @@ class PlayState extends FlxState
             add(monika);
             add(natsuki);
             add(yuri);
-            */
 
             dialogueManager.start();
         }

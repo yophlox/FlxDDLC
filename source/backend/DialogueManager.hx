@@ -4,6 +4,8 @@ import flixel.text.FlxText;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
+import hscript.Parser;
+import hscript.Interp;
 using StringTools;
 
 typedef DialogueLine = {
@@ -25,10 +27,15 @@ class DialogueManager
     private var textTimer:Float = 0;
     private var textSpeedMultiplier:Float = 1.0;
     private static var playerName:String = "MC";
+    private var dialogueFile:String;
+    private var parser:Parser;
+    private var interp:Interp;
+    private var lastExpression:String = "";
 
     public function new(dialogueFile:String)
     {
-        dialogues = parseDialogueFile(dialogueFile);
+        this.dialogueFile = dialogueFile;
+        dialogues = [];
         currentLine = 0;
 
         dialogueFlxText = new FlxText(225, FlxG.height - 150, FlxG.width - 450, "");
@@ -38,60 +45,66 @@ class DialogueManager
         nameFlxText.setFormat("assets/fonts/Aller_Rg.ttf", 28, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 
         characters = new Map<String, FlxSprite>();
+        parser = new Parser();
+        interp = new Interp();
+        setupInterpreter();
+    }
+
+    private function setupInterpreter():Void
+    {
+        interp.variables.set("showDialogue", showDialogue);
+        interp.variables.set("setCharacterExpression", setCharacterExpression);
+        interp.variables.set("playerName", playerName);
     }
 
     private function parseDialogueFile(dialogueFile:String):Array<DialogueLine>
     {
-        var lines = openfl.Assets.getText(dialogueFile).split("\n");
-        var parsedDialogues = new Array<DialogueLine>();
-
-        for (line in lines)
-        {
-            line = line.trim();
-            if (line.length > 0)
-            {
-                var parts = line.split(" ");
-                if (parts.length >= 2)
-                {
-                    var character = parts[0];
-                    var expression = "neutral";
-                    var textStart = 1;
-
-                    if (parts[1].startsWith("(") && parts[1].endsWith(")")) {
-                        expression = parts[1].substr(1, parts[1].length - 2);
-                        textStart = 2;
-                    }
-
-                    var text = parts.slice(textStart).join(" ").trim();
-                    if (text.startsWith("\"") && text.endsWith("\"")) {
-                        text = text.substr(1, text.length - 2);
-                    }
-                    
-                    text = StringTools.replace(text, "[player]", playerName);
-                    
-                    if (character == "s" || character == "mc" || character == "n" || character == "y" || character == "m") {
-                        parsedDialogues.push({
-                            character: character,
-                            text: text,
-                            expression: expression
-                        });
-                    } else {
-                        parsedDialogues.push({
-                            character: "",
-                            text: line,
-                            expression: "neutral"
-                        });
-                    }
-                }
+        try {
+            var script = openfl.Assets.getText(dialogueFile);
+            if (script == null || script == "") {
+                trace('Error: Dialogue file is empty or not found: $dialogueFile');
+                return [];
             }
+            var program = parser.parseString(script);
+            interp.execute(program);
+            return dialogues;
+        } catch (e:Dynamic) {
+            trace('Error parsing dialogue file: $e');
+            return [];
         }
-
-        return parsedDialogues;
     }
 
     public function start():Void
     {
-        updateDialogue();
+        dialogues = parseDialogueFile(dialogueFile + ".hx");
+        trace('Loaded ${dialogues.length} dialogue lines');
+        currentLine = 0;
+        if (dialogues.length > 0) {
+            updateDialogue();
+        } else {
+            trace('Warning: No dialogues loaded from file: $dialogueFile');
+        }
+    }
+
+    private function showDialogue(character:String, text:String):Void
+    {
+        nameFlxText.text = character;
+        targetText = text;
+        currentText = "";
+        textTimer = 0;
+        
+        dialogues.push({
+            character: character,
+            text: text,
+            expression: lastExpression
+        });
+    }
+
+    private function setCharacterExpression(character:String, expression:String):Void
+    {
+        trace('Setting character expression: $character, $expression');
+        lastExpression = expression;
+        showCharacter(character, expression);
     }
 
     private function updateDialogue():Void
@@ -99,19 +112,13 @@ class DialogueManager
         if (currentLine < dialogues.length)
         {
             var line = dialogues[currentLine];
-            switch (line.character) {
-                case "s":
-                    nameFlxText.text = "Sayori";
-                case "mc":
-                    nameFlxText.text = playerName;
-                case "n":
-                    nameFlxText.text = "Natsuki";
-                case "y":
-                    nameFlxText.text = "Yuri";
-                case "m":
-                    nameFlxText.text = "Monika";
-                default:
-                    nameFlxText.text = "";
+            nameFlxText.text = switch (line.character) {
+                case "s": "Sayori";
+                case "mc": playerName;
+                case "n": "Natsuki";
+                case "y": "Yuri";
+                case "m": "Monika";
+                default: line.character; // Use the character name as-is if not recognized
             }
             targetText = line.text;
             currentText = "";
@@ -133,6 +140,8 @@ class DialogueManager
 
     public function update(elapsed:Float):Void
     {
+        if (targetText == null) return;
+        
         if (currentText.length < targetText.length)
         {
             textTimer += elapsed * textSpeedMultiplier;
@@ -147,6 +156,8 @@ class DialogueManager
 
     public function skipText():Void
     {
+        if (targetText == null) return;
+        
         if (currentText.length < targetText.length)
         {
             currentText = targetText;
@@ -160,25 +171,45 @@ class DialogueManager
 
     private function showCharacter(character:String, expression:String):Void
     {
+        trace('Showing character: $character with expression: $expression');
         for (char in characters.keys())
         {
             characters[char].visible = false;
+            trace('Setting ${char} visibility to false');
         }
 
-        if (characters.exists(character))
+        // Convert full names to abbreviations
+        var charAbbr = switch (character.toLowerCase()) {
+            case "sayori": "s";
+            case "monika": "m";
+            case "natsuki": "n";
+            case "yuri": "y";
+            default: character.toLowerCase();
+        }
+
+        if (characters.exists(charAbbr))
         {
-            var sprite = characters[character];
+            var sprite = characters[charAbbr];
             sprite.visible = true;
+            trace('Setting $charAbbr visibility to true');
             
-            var expressionPath = 'assets/images/characters/${character.toLowerCase()}/${expression}.png';
+            var expressionPath = 'assets/images/characters/${charAbbr}/${expression}.png';
+            trace('Attempting to load: $expressionPath');
             if (openfl.Assets.exists(expressionPath))
             {
                 sprite.loadGraphic(expressionPath);
+                trace('Loaded $expressionPath');
             }
             else
             {
-                sprite.loadGraphic('assets/images/characters/${character.toLowerCase()}/neutral.png');
+                var neutralPath = 'assets/images/characters/${charAbbr}/neutral.png';
+                sprite.loadGraphic(neutralPath);
+                trace('Fallback: Loaded $neutralPath');
             }
+        }
+        else
+        {
+            trace('Character $charAbbr not found in characters map');
         }
     }
 

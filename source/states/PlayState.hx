@@ -18,7 +18,15 @@ class PlayState extends FlxState
     
     override public function create()
     {
+        trace("PlayState create() started");
         mouse = FlxG.mouse;
+
+        if (act1)
+        {
+            dialogueManager = new DialogueManager("assets/data/testdialogue");
+            //dialogueManager = new DialogueManager("assets/data/act1/dialogue_ch0_main"); // commented out until I add all of the expressions lol
+            dialogueManager.setTextSpeed(2.0);
+        }
 
         var clubbg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('bg/club'));
         clubbg.scrollFactor.set(0, 0.18);
@@ -26,6 +34,26 @@ class PlayState extends FlxState
         clubbg.updateHitbox();
         clubbg.screenCenter();
         add(clubbg);
+
+        var sayori = new FlxSprite(100, 100).loadGraphic(Paths.image('characters/s/neutral'));
+        var monika = new FlxSprite(300, 100).loadGraphic(Paths.image('characters/m/neutral'));
+        var natsuki = new FlxSprite(500, 100).loadGraphic(Paths.image('characters/n/neutral'));
+        var yuri = new FlxSprite(700, 100).loadGraphic(Paths.image('characters/y/neutral'));
+        
+        dialogueManager.addCharacter("s", sayori);
+        dialogueManager.addCharacter("m", monika);
+        dialogueManager.addCharacter("n", natsuki);
+        dialogueManager.addCharacter("y", yuri);
+
+        sayori.visible = true;
+        monika.visible = true;
+        natsuki.visible = true;
+        yuri.visible = true;
+        
+        add(sayori);
+        add(monika);
+        add(natsuki);
+        add(yuri);
 
         var dialoguebox:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('textbox'));
         dialoguebox.scrollFactor.set(0, 0.18);
@@ -37,45 +65,32 @@ class PlayState extends FlxState
 
         if (act1)
         {
-            dialogueManager = new DialogueManager("assets/data/testdialogue.txt");
-            dialogueManager.setTextSpeed(2.0);
             add(dialogueManager.getDialogueFlxText());
             add(dialogueManager.getNameFlxText());
-            
-            var sayori = new FlxSprite(100, 100);
-            var monika = new FlxSprite(300, 100);
-            var natsuki = new FlxSprite(500, 100);
-            var yuri = new FlxSprite(700, 100);
-
-            dialogueManager.addCharacter("s", sayori);
-            dialogueManager.addCharacter("m", monika);
-            dialogueManager.addCharacter("n", natsuki);
-            dialogueManager.addCharacter("y", yuri);
-
-            add(sayori);
-            add(monika);
-            add(natsuki);
-            add(yuri);
-
             dialogueManager.start();
         }
 
+        trace("PlayState create() completed");
         super.create();
     }
 
     override public function update(elapsed:Float)
     {
-        super.update(elapsed);
+        try {
+            super.update(elapsed);
 
-        if (FlxG.keys.justPressed.R)
-        {
-            FlxG.resetState();
-        }
-        
-        if (FlxG.keys.justPressed.ENTER || mouse.justPressed) {
-            dialogueManager.skipText();
-        }
+            if (FlxG.keys.justPressed.R)
+            {
+                FlxG.resetState();
+            }
+            
+            if (FlxG.keys.justPressed.ENTER || mouse.justPressed) {
+                dialogueManager.skipText();
+            }
 
-        dialogueManager.update(elapsed);
+            dialogueManager.update(elapsed);
+        } catch (e:Dynamic) {
+            trace('Error in PlayState update: $e');
+        }
     }
 }

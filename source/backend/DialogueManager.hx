@@ -6,6 +6,12 @@ import flixel.util.FlxColor;
 import flixel.FlxSprite;
 using StringTools;
 
+typedef DialogueLine = {
+    character:String,
+    text:String,
+    expression:String
+}
+
 class DialogueManager
 {
     private var dialogueFlxText:FlxText;
@@ -48,7 +54,15 @@ class DialogueManager
                 if (parts.length >= 2)
                 {
                     var character = parts[0];
-                    var text = parts.slice(1).join(" ").trim();
+                    var expression = "neutral";
+                    var textStart = 1;
+
+                    if (parts[1].startsWith("(") && parts[1].endsWith(")")) {
+                        expression = parts[1].substr(1, parts[1].length - 2);
+                        textStart = 2;
+                    }
+
+                    var text = parts.slice(textStart).join(" ").trim();
                     if (text.startsWith("\"") && text.endsWith("\"")) {
                         text = text.substr(1, text.length - 2);
                     }
@@ -58,12 +72,14 @@ class DialogueManager
                     if (character == "s" || character == "mc" || character == "n" || character == "y" || character == "m") {
                         parsedDialogues.push({
                             character: character,
-                            text: text
+                            text: text,
+                            expression: expression
                         });
                     } else {
                         parsedDialogues.push({
                             character: "",
-                            text: line
+                            text: line,
+                            expression: "neutral"
                         });
                     }
                 }
@@ -100,7 +116,7 @@ class DialogueManager
             targetText = line.text;
             currentText = "";
             textTimer = 0;
-            showCharacter(line.character);
+            showCharacter(line.character, line.expression);
             currentLine++;
         }
         else
@@ -142,11 +158,27 @@ class DialogueManager
         }
     }
 
-    private function showCharacter(character:String):Void
+    private function showCharacter(character:String, expression:String):Void
     {
         for (char in characters.keys())
         {
-            characters[char].visible = (char == character);
+            characters[char].visible = false;
+        }
+
+        if (characters.exists(character))
+        {
+            var sprite = characters[character];
+            sprite.visible = true;
+            
+            var expressionPath = 'assets/images/characters/${character.toLowerCase()}/${expression}.png';
+            if (openfl.Assets.exists(expressionPath))
+            {
+                sprite.loadGraphic(expressionPath);
+            }
+            else
+            {
+                sprite.loadGraphic('assets/images/characters/${character.toLowerCase()}/neutral.png');
+            }
         }
     }
 
@@ -175,9 +207,4 @@ class DialogueManager
     {
         textSpeedMultiplier = speed;
     }
-}
-
-typedef DialogueLine = {
-    character:String,
-    text:String
 }

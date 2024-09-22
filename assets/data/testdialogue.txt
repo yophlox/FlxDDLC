@@ -1,4 +1,4 @@
-s "Doc Dialouge 1"
-m "Doc Dialouge 2"
-n "Doc Dialouge 3"
-y "Doc Dialouge 4"
+s (neutral) "I'm so excited!"
+m (neutral) "That's great, Sayori."
+n (neutral) "What's all the fuss about?"
+y (neutral) "Um... I'm not sure..."

@@ -37,20 +37,20 @@ class PlayState extends FlxState
 
         if (act1)
         {
-            dialogueManager = new DialogueManager("assets/data/act1/dialogue.txt");
+            dialogueManager = new DialogueManager("assets/data/testdialogue.txt");
             dialogueManager.setTextSpeed(2.0);
             add(dialogueManager.getDialogueFlxText());
             add(dialogueManager.getNameFlxText());
             
-            var sayori = new FlxSprite(100, 100).loadGraphic(Paths.image('characters/sayori'));
-            var monika = new FlxSprite(300, 100).loadGraphic(Paths.image('characters/monika'));
-            var natsuki = new FlxSprite(500, 100).loadGraphic(Paths.image('characters/natsuki'));
-            var yuri = new FlxSprite(700, 100).loadGraphic(Paths.image('characters/yuri'));
+            var sayori = new FlxSprite(100, 100);
+            var monika = new FlxSprite(300, 100);
+            var natsuki = new FlxSprite(500, 100);
+            var yuri = new FlxSprite(700, 100);
 
-            dialogueManager.addCharacter("Sayori", sayori);
-            dialogueManager.addCharacter("Monika", monika);
-            dialogueManager.addCharacter("Natsuki", natsuki);
-            dialogueManager.addCharacter("Yuri", yuri);
+            dialogueManager.addCharacter("s", sayori);
+            dialogueManager.addCharacter("m", monika);
+            dialogueManager.addCharacter("n", natsuki);
+            dialogueManager.addCharacter("y", yuri);
 
             add(sayori);
             add(monika);

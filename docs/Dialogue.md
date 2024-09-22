@@ -21,11 +21,7 @@ showDialogue(playerName, "I'm so excited!"); // dis is for MC/The Player's dialo
 showDialogue("", "mmm me when I thinky"); // dis is for MC/The Player's thoughts.
 ```
 
-s stands for Sayori
-m stands for Monika
-n stands for Natsuki
-y stands for Yuri
-mc stands for The name you input at the beginning of the game.
+s stands for Sayori, m stands for Monika, n stands for Natsuki, y stands for Yuri, and mc stands for The name you input at the beginning of the game.
 
 If you wanna go a line down you'd use "n/"
 

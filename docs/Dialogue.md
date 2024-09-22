@@ -1,13 +1,25 @@
-Basically the dialogue is handled the same way that base ddlc would handle it.
+# FlxDDLC Dialogue System
+
+Basically the dialogue is handled ALMOST the same way that base ddlc would handle it but with some modifications.
 
 For instance:
 
-s "Doc Dialouge 1"
-m "Doc Dialouge 2"
-n "Doc Dialouge 3"
-y "Doc Dialouge 4"
-mc "MC Moment"
-"" (Mainly used for MC's thoughts)
+```haxe
+setCharacterExpression("s", "neutral");
+showDialogue("Sayori", "I'm so excited!");
+
+setCharacterExpression("m", "neutral");
+showDialogue("Monika", "That's great, Sayori.");
+
+setCharacterExpression("n", "neutral");
+showDialogue("Natsuki", "What's all the fuss about?");
+
+setCharacterExpression("y", "neutral");
+showDialogue("Yuri", "Um... I'm not sure...");
+
+showDialogue(playerName, "I'm so excited!"); // dis is for MC/The Player's dialogue.
+showDialogue("", "mmm me when I thinky"); // dis is for MC/The Player's thoughts.
+```
 
 s stands for Sayori
 m stands for Monika

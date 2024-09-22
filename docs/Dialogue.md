@@ -25,7 +25,7 @@ s stands for Sayori
 m stands for Monika
 n stands for Natsuki
 y stands for Yuri
-mc stands for The name you input at the beginning of the game, which isn't done yet at the time of writing this so it's gonna be defined in the DialogueManager script.
+mc stands for The name you input at the beginning of the game.
 
 If you wanna go a line down you'd use "n/"
 

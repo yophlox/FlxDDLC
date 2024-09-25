@@ -1,9 +1,8 @@
 # FlxDDLC
 
-A wip remake of Doki Doki Literature Club in HaxeFlixel
+A w.i.p. remake of Doki Doki Literature Club in HaxeFlixel
 
 # Credits
 
+* YoPhlox - Remake
 * Dan Salvato - Original Creator
-
-* TyDotCS - Remake

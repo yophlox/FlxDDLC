@@ -11,7 +11,7 @@ class MainMenuState extends FlxState
 
     override public function create()
     {
-		titlestatebg = new FlxBackdrop(Paths.image('gui/menu_bg'), 0.2, 0, true, true);
+		titlestatebg = new FlxBackdrop(Paths.image('gui/menu_bg'), XY, 0.2, 0);
 		titlestatebg.velocity.set(200, 110);
 		titlestatebg.updateHitbox();
 		titlestatebg.screenCenter(X);

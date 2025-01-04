@@ -3,7 +3,6 @@ package states;
 import flixel.FlxState;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import backend.DialogueManager;
 import flixel.input.mouse.FlxMouse;
 
 class WarningState extends FlxState
@@ -43,12 +42,13 @@ class WarningState extends FlxState
     {
         super.update(elapsed);
 
-        if (FlxG.keys.justPressed.SPACE)
+        if (FlxG.keys.justPressed.ENTER)
         {
             FlxG.switchState(new MainMenuState());
         }
         
         // Reg shit
+        /*
         if (FlxG.keys.justPressed.ENTER || mouse.justPressed) {
             if (!dialogueManager.isDialogueComplete()) {
                 dialogueManager.start();
@@ -56,5 +56,6 @@ class WarningState extends FlxState
                 // blech
             }
         }
+        */
     }
 }

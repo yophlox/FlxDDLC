@@ -4,6 +4,8 @@ import flixel.FlxState;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxBackdrop;
+import substates.NameEnterSubstate;
+import states.SayoriSqueaker;
 
 class MainMenuState extends FlxState
 {
@@ -40,12 +42,19 @@ class MainMenuState extends FlxState
 
     override public function update(elapsed:Float)
     {
-        if (FlxG.keys.justPressed.ENTER)
+		#if christmas
+		if (FlxG.keys.justPressed.ENTER)
+		{
+			FlxG.switchState(new SayoriSqueaker());
+		}
+		#else
+		if (FlxG.keys.justPressed.ENTER)
         {
 			//FlxG.switchState(new PlayState());
-			var typename = new substates.NameEnterSubstate();
+			var typename = new NameEnterSubstate();
             openSubState(typename);
         }
+		#end
         super.update(elapsed);
     }
 }

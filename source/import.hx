@@ -1,2 +1,4 @@
 import Paths;
-import backend.DialogueManager;
+import core.DialogueManager;
+import core.poem.PoemDokiBase;
+import core.poem.SayoriMini;

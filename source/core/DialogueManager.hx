@@ -1,4 +1,4 @@
-package backend;
+package core;
 
 import flixel.text.FlxText;
 import flixel.FlxG;

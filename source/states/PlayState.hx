@@ -3,7 +3,6 @@ package states;
 import flixel.FlxState;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import backend.DialogueManager;
 import flixel.input.mouse.FlxMouse;
 using StringTools;
 
